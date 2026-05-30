@@ -1,5 +1,3 @@
--- cdc_merge macro handles dedup, archive detection and merging of CDC data into Base table
-
 {% macro cdc_merge(
     source_relation,
     target_relation,
@@ -16,6 +14,7 @@
                     select least(coalesce(max(load_timestamp_utc),'1900-01-01'::timestamp_ntz),'{{var("replay_watermark")}}'::timestamp_ntz)
                     from {{target_relation}}
                 )
+                and load_timestamp_utc <= '{{var("replay_end")}}'::timestamp_ntz
             {% endif %}
     ),
 

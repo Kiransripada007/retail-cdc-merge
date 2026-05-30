@@ -2,7 +2,7 @@ name: 'retail_cdc'
 version: '1.0.0'
 config-version: 2
 
-profile: 'default'
+profile: 'retail_cdc'
 
 model-paths: ["models"]
 analysis-paths: ["analyses"]
