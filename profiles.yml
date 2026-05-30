@@ -1,0 +1,13 @@
+retail_cdc:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: ld72526
+      user: KIRANKUMARSRIPADA
+      password: Umadevi@1978uu
+      role: ACCOUNTADMIN
+      database: RDL_TMS_SVT
+      warehouse: COMPUTE_WH
+      schema: CA
+      threads: 4
