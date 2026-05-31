@@ -23,9 +23,6 @@
     )
 }}
 
--- Schema bootstrap: on first run (full-refresh) this SELECT defines the table
--- structure by mirroring the queue schema. No rows are inserted — cdc_merge
--- in the post_hook handles all data movement on every run.
 select *
 from {{ source('bronze','shipment_accessorial_queue') }}
 where 1 = 0
