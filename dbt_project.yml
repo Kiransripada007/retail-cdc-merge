@@ -17,9 +17,11 @@ clean-targets:
   - "dbt_packages"
 
 vars:
-  is_replay:         false
-  replay_watermark:  '1900-01-01 00:00:00'
-  replay_end:        '9999-12-31 23:59:59'
+  # Sentinel default — replay mode activates automatically when
+  # replay_watermark is passed with a real date via --vars.
+  # is_replay is never required explicitly.
+  replay_watermark: '1900-01-01 00:00:00'
+  replay_end:       '9999-12-31 23:59:59'
   queue_tables:
     - shipment_accessorial_queue
     - orders_queue
