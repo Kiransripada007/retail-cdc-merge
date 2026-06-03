@@ -1,35 +1,64 @@
 version: 2
 
+# ─────────── shipment_accessorial ───────────
 models:
   - name: shipment_accessorial
     description: >
-      Current-state Silver table for shipment accessorials. Merged from the queue hourly.
+      Current-state Silver table for shipment accessorials.
+      CDC MERGE from Queue (hourly).
+      Soft deletes: LOAD_OPERATION='D' (row stays in base table).
+      Archives: DATA_SOURCE='ARCHCA22', LOAD_OPERATION='U' (row stays).
+
+    columns:
+      - name: SHIPMENT_ID
+        tests: [not_null]                   
+      - name: SHP_ACCESSORIAL_ID
+        tests: [not_null]                   
+      - name: RESOURCE_TYPE
+        tests: [not_null]                   
+      - name: LOAD_OPERATION
+        tests:                              
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['I', 'U', 'D']
+      - name: LOAD_TIMESTAMP_UTC
+        tests: [not_null]                   
+      - name: LOAD_CDC_SCN
+        tests: [not_null]                   
+
+    tests:                                  
+      - unique_composite_key:
+          arguments:
+            key_columns: ['SHIPMENT_ID', 'SHP_ACCESSORIAL_ID', 'RESOURCE_TYPE']
+      - row_count_non_zero
+      - archival_operation_valid
+      - no_future_timestamps
+
+
+  # ─────────── orders ───────────
   - name: orders
     description: >
       Current-state Silver table for orders. Merged from the queue hourly.
+
     columns:
       - name: ORDER_ID
-        tests: [not_null]
-      - name: SHIPMENT_ID
-        tests: [not_null]
-      - name: SHP_ACCESSORIAL_ID
-        tests: [not_null]
-      - name: RESOURCE_TYPE
         tests: [not_null]
       - name: LOAD_OPERATION
         tests:
           - not_null
           - accepted_values:
               arguments:
-                values: ['I','U','D']
+                values: ['I', 'U', 'D']
       - name: LOAD_TIMESTAMP_UTC
         tests: [not_null]
       - name: LOAD_CDC_SCN
         tests: [not_null]
+
     tests:
       - unique_composite_key:
           arguments:
-            key_columns: ['SHIPMENT_ID','SHP_ACCESSORIAL_ID','RESOURCE_TYPE','ORDER_ID']
+            key_columns: ['ORDER_ID']
       - row_count_non_zero
       - archival_operation_valid
       - no_future_timestamps
